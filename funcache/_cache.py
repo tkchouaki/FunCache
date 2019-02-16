@@ -54,7 +54,7 @@ class Cache(object):
     def post_wrap(self):
         """
         This method is meant to be redefined by subclasses.
-        It is called when the cached function is wrapped
+        It is called just after the function is wrapped & func_key attribute is set.
         """
         pass
 
@@ -148,7 +148,7 @@ class Cache(object):
     def enable_multiprocessing(cls, pool, pool_size):
         """
         Enables the cache to multiprocessing with a given pool.
-        Note the calling the function will convert the cache objects to ones that are sharable across processes.
+        Note the calling the function will convert the cache objects to ones that are shareable across processes.
         Which could slower the access
         :param pool: The pool of processes for which we enable the Cache
         :type pool: multiprocessing.Pool
