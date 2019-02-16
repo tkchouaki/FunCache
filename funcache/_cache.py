@@ -106,15 +106,25 @@ class Cache(object):
 
     @classmethod
     def activate(cls):
+        """
+        Reactivates the cache service (it is activated by default, so this method is only useful after deactivation).
+        Note that this method affects only current process. You should call it separately for each process.
+        """
         cls._is_active = True
 
     @classmethod
     def deactivate(cls):
+        """
+        Deactivates the cache service (it is activated by default)
+        Note that this method affects only current process. You should call it separately for each process.
+        :return:
+        """
         cls._is_active = False
 
     def _get(self, *args):
         """
-        Computes the function's result for the given args only if it's not already in the cache
+        Computes the function's result for the given args only if it's not already in the cache.
+        If the cache is not active, the function is just called
         :param args: The arguments to pass to the function
         :return: The function's result for the given arguments
         """
@@ -154,6 +164,13 @@ class Cache(object):
         return result
 
     def post_get(self, result, *args):
+        """
+        This method is meant to be implemented by subclasses.
+        It is called after the cache is accessed.
+        Note that this method is not called if the cache is not active
+        :param result: The result retrieved by the cache
+        :param args: The args that were passed to the function
+        """
         pass
 
     @classmethod
