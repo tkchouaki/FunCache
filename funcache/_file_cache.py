@@ -13,6 +13,8 @@ class FileCache(Cache):
     _cached_functions = dict()
     _cache = dict()
     _is_init = False
+    # A boolean specifying if the Cache is active or not. True by default
+    _is_active = True
     # Unique to the file cache
     _default_cache_root = "resources/database/"
     _default_cache_files_extension = ".pkl"

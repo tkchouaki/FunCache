@@ -14,6 +14,8 @@ class Cache(object):
     _cache = dict()
     # A boolean specifying if the Cache was initialized or not
     _is_init = False
+    # A boolean specifying if the Cache is active or not. True by default
+    _is_active = True
 
     # Attributes used for multiprocessing
     # A manager for the sharable objects
@@ -102,12 +104,22 @@ class Cache(object):
             args = tuple([Cache.get_args_key(arg) for arg in args])
         return args
 
+    @classmethod
+    def activate(cls):
+        cls._is_active = True
+
+    @classmethod
+    def deactivate(cls):
+        cls._is_active = False
+
     def _get(self, *args):
         """
         Computes the function's result for the given args only if it's not already in the cache
         :param args: The arguments to pass to the function
         :return: The function's result for the given arguments
         """
+        if not self._is_active:
+            return self.original_function(*args)
         # Initialize the Cache if it's not already done
         if not self._is_init:
             self.init()
@@ -164,7 +176,7 @@ class Cache(object):
         cls._running_queries = cls._manager.list(cls._running_queries)
         # Send the shared objects to the processes
         cls.pre_share_context()
-        context = [cls._cache, cls._locks, cls._running_queries]
+        context = [cls._is_active, cls._cache, cls._locks, cls._running_queries]
         context.extend(cls.build_context())
         pool.starmap(cls.post_spawn, [tuple(context)] * pool_size)
 
@@ -198,9 +210,10 @@ class Cache(object):
         pass
 
     @classmethod
-    def post_spawn(cls, cache, locks, running_queries, *args):
+    def post_spawn(cls, is_active, cache, locks, running_queries, *args):
         """
         This method receives the shared cache objects from the main process
+        :param is_active: The activity/inactivity of the Cache
         :param cache: The cache
         :param locks: The locks
         :param running_queries: The running queries
@@ -208,6 +221,7 @@ class Cache(object):
         """
         cls._is_init = True
         cls._multiprocessing = True
+        cls._is_active = is_active
         cls._cache = cache
         cls._locks = locks
         cls._running_queries = running_queries

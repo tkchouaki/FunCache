@@ -21,8 +21,10 @@ def compute(x):
 
 if __name__ == "__main__":
     begin_time = time.time()
-    values = list(range(1000)) * 10
+    values = list(range(10)) * 100
     use_pool = True
+    # MemoryCache.deactivate()
+    # FileCache.deactivate()
     if use_pool:
         pool_size = cpu_count()
         pool = Pool(pool_size)

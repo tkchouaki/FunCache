@@ -11,6 +11,8 @@ class MemoryCache(Cache):
     _cached_functions = dict()
     _cache = dict()
     _is_init = False
+    # A boolean specifying if the Cache is active or not. True by default
+    _is_active = True
     # Unique to the memory cache
     _accesses = dict()
     # Attributes used for multiprocessing
