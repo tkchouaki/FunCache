@@ -41,7 +41,6 @@ class FileCache(Cache):
                 with open(cache_file_path, "rb") as f:
                     cls._cache[cached_function] = pickle.load(f)
                     f.close()
-                    print("loaded " + str(cls._cache[cached_function]))
             except FileNotFoundError:
                 # If the file doesn't exist, we initialize an empty dictionary for it
                 cls._cache[cached_function] = dict()
@@ -90,5 +89,4 @@ class FileCache(Cache):
                 pass
             f = open(cls._cache_files[cached_function], "wb")
             pickle.dump(cls._cache[cached_function], f)
-            print("saved " + str(cls._cache[cached_function]))
             f.close()
