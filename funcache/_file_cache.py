@@ -57,8 +57,8 @@ class FileCache(Cache):
         cls._is_init = True
         cls._default_cache_root = default_cache_root
         cls._default_cache_files_extension = default_cache_files_extension
+        cls.set_at_exit()
         for cached_function in cls._cached_functions:
-            cls.set_at_exit()
             if cls._cache_files[cached_function] is None:
                 cls._cache_files[cached_function] = cls.get_default_cache_file_path(cached_function)
             cache_file_path = cls._cache_files[cached_function]

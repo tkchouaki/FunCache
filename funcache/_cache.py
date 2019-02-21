@@ -185,6 +185,7 @@ class Cache(object):
         """
         if not cls._is_init:
             cls.init()
+        cls._multiprocessing = True
         cls._manager = Manager()
         cls._cache = cls._manager.dict(cls._cache)
         cls._locks = dict()
